@@ -1,0 +1,193 @@
+---
+title: |
+        | \Huge{Pixel Data: Project Two} \vspace{25pt}
+author: | 
+        | \LARGE{Tshepo Ralehoko}
+date: "06 July 2018"
+output: 
+  pdf_document
+fontsize: 10pt
+fig_caption: yes
+documentclass: report
+header-includes:
+  - \usepackage{geometry}
+  - \geometry{
+    left = 20mm,
+    right = 18mm,
+    top = 20mm,
+    bottom = 20mm,
+    }
+  - \usepackage{setspace}
+  - \onehalfspacing
+  - \usepackage{graphicx}
+  - \usepackage{xcolor}
+  - \usepackage{amssymb}
+  - \usepackage{amsmath}
+  - \usepackage{amsfonts}
+  - \usepackage{mathtools}
+  - \usepackage{array}
+  - \usepackage{enumitem}
+  - \usepackage{float}
+  - \usepackage{hyperref}
+  - \hypersetup{
+    colorlinks = TRUE,
+    }
+  - \usepackage{tocbibind}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+\pagenumbering{roman}
+
+
+\tableofcontents
+
+
+\newpage
+
+
+\listoffigures
+
+
+\newpage
+
+
+\listoftables
+
+
+\newpage
+
+
+\section*{Acknowledgements}
+\addcontentsline{toc}{section}{Acknowledgements}
+
+\indent One of the resources of note for this project include the \href{https://web.stanford.edu/~hastie/ElemStatLearn/}{Elements of Statistical Learning} book. It is my intention to acknowledge the sources of information used for the work herein. This book was an instrumental asset in the data mining elements of the project with its wealth of well-documented knowledge on the applications of statistical learning techniques. I have also learnt a lot about \textit{R} programming from various open source platforms on conducting data analysis using \textit{R}. Additionally, I also wish to take time and appreciate the various data analysis-rich open source platforms that have helped me gain more skills in using \textit{R}.
+
+
+\newpage
+
+
+\section*{List of Notations}
+\addcontentsline{toc}{section}{List of Notations}
+
+
+\newpage
+
+
+\section*{List of Keywords}
+\addcontentsline{toc}{section}{List of Keywords}
+
+
+\newpage
+
+
+
+\pagenumbering{arabic}
+
+
+\section{Configurations}
+
+
+
+\indent Below is the working directory that was created for the project. If this script is run from another computer, this will have to ne changed accordingly. We also load the dataset that we are going to use for the project.
+
+```{r}
+#clearing the work space
+rm(list = ls())
+
+#checking the current working directory
+getwd()
+
+#setting my own working directory
+setwd("C:\\Users\\Tshepo Ralehoko\\Downloads\\Data Science - R\\Pixel Project 2")
+
+
+#loading the dataset into R
+pixel = read.csv(file = file.path("C:", "Users", "Tshepo Ralehoko", "Downloads", 
+                          "MSc Data Science - UCT", "Coursework", 
+                          "Supervised Learning", "Assignments",                                                               "Train_Digits_20180302.csv"),
+                          header = TRUE, sep = ",")
+```
+
+
+\section{Introduction}
+
+
+
+
+\section{Data Description and Data Summary}
+
+
+```{r, eval = TRUE, fig.height = 4.5, fig.width = 5}
+#printing a few of the last records of our dataset
+tail(x = pixel, n = 5)
+
+#classifying the numbers in the digits column as either even or odd
+even_odd = ifelse(test = pixel[, 1] %% 2 == 0, yes = "even", no = "odd")
+
+#we also do another classification using 0 for even numbers and 1 otherwise
+#this might be useful in data modelling
+zero_one = ifelse(test = pixel[, 1] %% 2 == 0, yes = 0, no = 1)
+
+#the formula above has classified the digits correctly
+#see below
+table(pixel[, 1], even_odd)
+
+table(pixel[, 1], zero_one)
+pixel
+
+#we replace the Digit column in the orginal data frame
+#the two columns above result in two new data frames being created
+pixel_even_odd = data.frame(Digits = even_odd, pixel[, -1])
+pixel_zero_one = data.frame(Digits = zero_one, pixel[, -1])
+
+#summary statistics of a sample of the predictor variables
+#seems to suggest that the variables are populated with zeros
+summary(pixel[, c(2:7)])
+
+
+
+
+boxplot.matrix(as.matrix(pixel[, c(2:7)]),
+        use.cols = TRUE, labels = c("Pixel_2,", "Pixel_3", "Pixel_4", "Pixel_5", "Pixel_6", "Pixel_7)"))
+
+
+sapply(X = pixel, function(x) length(unique(x)))
+
+
+
+unique_count = sapply(X = pixel[, -1], function(x) length(unique(x)), simplify = TRUE)
+
+
+unique_count = as.data.frame(table(unique_count))
+unique_count
+
+apply(pixel[, -1], 2, function(x) length(unique(x)))
+
+
+
+
+
+library(plyr)
+arrange(df = unique_count, desc(Freq))
+
+library(ggplot2)
+
+ggplot(warpbreaks, aes(x=breaks)) + 
+  geom_histogram(bins=10) + 
+  facet_grid(wool ~ tension) + 
+  theme_classic()
+
+ggplot(warpbreaks, aes(y=breaks, x=tension, fill = wool)) + 
+  geom_boxplot() + 
+  theme_classic()
+
+```
+
+
+\section{Data Pre-processing}
+
+
+
