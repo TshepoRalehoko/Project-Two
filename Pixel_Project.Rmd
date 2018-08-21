@@ -18,7 +18,7 @@ header-includes:
     bottom = 20mm,
     }
   - \usepackage{setspace}
-  - \onehalfspacing
+  - \setstretch{2.2}
   - \usepackage{graphicx}
   - \usepackage{xcolor}
   - \usepackage{amssymb}
@@ -95,20 +95,19 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 #clearing the work space
-rm(list = ls())
+rm(list = ls()
+)
 
 #checking the current working directory
 getwd()
 
 #setting my own working directory
-setwd("C:\\Users\\Tshepo Ralehoko\\Downloads\\Data Science - R\\Pixel Project 2")
-
+setwd(file.path("C:", "Users", "Tshepo Ralehoko", "Downloads", "Data Science", "Data Science - R", "Projects", "Pixel Project 2")
+)
 
 #loading the dataset into R
-pixel = read.csv(file = file.path("C:", "Users", "Tshepo Ralehoko", "Downloads", 
-                          "MSc Data Science - UCT", "Coursework", 
-                          "Supervised Learning", "Assignments",                                                               "Train_Digits_20180302.csv"),
-                          header = TRUE, sep = ",")
+pixel = read.csv(file.path("C:", "Users", "Tshepo Ralehoko", "Downloads", "Data Science", "MSc Data Science - UCT", "Coursework", "Supervised Learning", "Assignments", "Train_Digits_20180302.csv")
+)
 ```
 
 
@@ -136,7 +135,8 @@ zero_one = ifelse(test = pixel[, 1] %% 2 == 0, yes = 0, no = 1)
 table(pixel[, 1], even_odd)
 
 table(pixel[, 1], zero_one)
-pixel
+
+
 
 #we replace the Digit column in the orginal data frame
 #the two columns above result in two new data frames being created
@@ -149,30 +149,6 @@ summary(pixel[, c(2:7)])
 
 
 
-
-boxplot.matrix(as.matrix(pixel[, c(2:7)]),
-        use.cols = TRUE, labels = c("Pixel_2,", "Pixel_3", "Pixel_4", "Pixel_5", "Pixel_6", "Pixel_7)"))
-
-
-sapply(X = pixel, function(x) length(unique(x)))
-
-
-
-unique_count = sapply(X = pixel[, -1], function(x) length(unique(x)), simplify = TRUE)
-
-
-unique_count = as.data.frame(table(unique_count))
-unique_count
-
-apply(pixel[, -1], 2, function(x) length(unique(x)))
-
-
-
-
-
-library(plyr)
-arrange(df = unique_count, desc(Freq))
-
 library(ggplot2)
 
 ggplot(warpbreaks, aes(x=breaks)) + 
@@ -183,6 +159,16 @@ ggplot(warpbreaks, aes(x=breaks)) +
 ggplot(warpbreaks, aes(y=breaks, x=tension, fill = wool)) + 
   geom_boxplot() + 
   theme_classic()
+
+library(plyr)
+library(dplyr)
+
+#counting the number of unique values in each coulumn
+pixel[,-1] %>%
+  summarise_all(n_distinct) %>%    #counting the number of unique values 
+  t() %>%               #transposing the vector
+  head(n = 20)
+
 
 ```
 
